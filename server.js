@@ -18,7 +18,8 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: "https://ishcon-frontend.vercel.app",
-   
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Custom headers if needed
   })
 );
 
