@@ -8,20 +8,19 @@ const messageRouter = require("./routers/messageRouter");
 const userRouter = require("./routers/userRouter");
 
 app.use(express.json());
-// Serve static files from the Vite build directory
-const path = require("path");
-app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
 
 const PORT = process.env.PORT || 3300;
 const DB_URI = process.env.DB_URI;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://ishcon-frontend.vercel.app/",
+   
+  })
+);
 
 /** Database connection starts */
 mongoose
