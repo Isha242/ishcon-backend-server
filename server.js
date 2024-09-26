@@ -17,7 +17,7 @@ const DB_URI = process.env.DB_URI;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "https://ishcon-frontend.vercel.app/",
+    origin: "https://ishcon-frontend.vercel.app",
    
   })
 );
