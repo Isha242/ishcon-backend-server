@@ -10,14 +10,14 @@ const userRouter = require("./routers/userRouter");
 app.use(express.json());
 
 
-const PORT = process.env.PORT || 3300;
+const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "https://ishcon.vercel.app",
+    origin: "https://ishcon.vercel.app", // Allow to server to accept request from different origin
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Custom headers if needed
   })
