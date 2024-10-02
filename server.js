@@ -13,6 +13,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
 const CLIENT_URL = process.env.CLIENT_URL;
+const ENV=process.env.ENV;
 console.log(CLIENT_URL);
 
 // Middleware
@@ -29,7 +30,7 @@ app.use(
 mongoose
   .connect(DB_URI)
   .then(() => {
-    console.log("Connection to MongoDB is established!");
+    console.log(`Connection to MongoDB ${ENV} is established!`);
   })
   .catch((err) => {
     console.log("Something went wrong with DB connection", err);
