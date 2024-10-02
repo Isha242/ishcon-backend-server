@@ -1,5 +1,5 @@
 const express = require("express");
-require("dotenv").config(); // Load env variables
+require("dotenv").config();
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,53 +9,42 @@ const userRouter = require("./routers/userRouter");
 
 app.use(express.json());
 
+
 const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
-const CLIENT_URL_PROD = process.env.CLIENT_URL_PROD; // Get client URL from env
-const CLIENT_URL_STAGE = process.env.CLIENT_URL_STAGE; // Get client URL from env
-const CLIENT_URL_DEV = process.env.CLIENT_URL_DEV; // Get client URL from env
-
-console.log(`DB_URI: ${DB_URI}`);
-console.log(`CLIENT_URL_PROD: ${CLIENT_URL_PROD}`);
-console.log(`CLIENT_URL_STAGE: ${CLIENT_URL_STAGE}`);
-console.log(`CLIENT_URL_DEV: ${CLIENT_URL_DEV}`);
+const CLIENT_URL = process.env.CLIENT_URL;
+const ENV=process.env.ENV;
+console.log(CLIENT_URL);
 
 // Middleware
 app.use(bodyParser.json());
-const allowedOrigins = [CLIENT_URL_PROD, CLIENT_URL_STAGE, CLIENT_URL_DEV];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
-        // If the origin is in the list of allowedOrigins or it's undefined (for non-browser clients like Postman)
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: CLIENT_URL, // Allow to server to accept request from different origin
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Custom headers if needed
   })
 );
-// Database connection
-mongoose 
+
+/** Database connection starts */
+mongoose
   .connect(DB_URI)
   .then(() => {
-    console.log("Connection to MongoDB is established!");
+    console.log(`Connection to MongoDB ${ENV} is established!`);
   })
   .catch((err) => {
     console.log("Something went wrong with DB connection", err);
   });
 
-// Routers
+/** Routers */
 app.use("/api/messages", messageRouter);
 app.use("/api/users", userRouter);
 
-// Fallback for 404 errors
+// Fallback middleware for 404 errors
 app.use(function (req, res) {
   res.status(404).send("404 Not Found!");
 });
+
 
 // Start the server
 app.listen(PORT, () => {
