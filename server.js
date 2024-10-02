@@ -12,12 +12,14 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
+const CLIENT_URL = process.env.CLIENT_URL;
+console.log(CLIENT_URL);
 
 // Middleware
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "https://ishcon.vercel.app", // Allow to server to accept request from different origin
+    origin: CLIENT_URL, // Allow to server to accept request from different origin
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Custom headers if needed
   })
@@ -47,4 +49,3 @@ app.use(function (req, res) {
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
-
