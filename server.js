@@ -22,14 +22,22 @@ console.log(`CLIENT_URL_DEV: ${CLIENT_URL_DEV}`);
 
 // Middleware
 app.use(bodyParser.json());
+const allowedOrigins = [CLIENT_URL_PROD, CLIENT_URL_STAGE, CLIENT_URL_DEV];
+
 app.use(
   cors({
-    origin: [CLIENT_URL_PROD, CLIENT_URL_STAGE, CLIENT_URL_DEV], // Dynamically allow requests from the correct client
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+        // If the origin is in the list of allowedOrigins or it's undefined (for non-browser clients like Postman)
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Custom headers if needed
   })
 );
-
 // Database connection
 mongoose 
   .connect(DB_URI)
