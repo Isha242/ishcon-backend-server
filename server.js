@@ -16,6 +16,9 @@ const CLIENT_URL_STAGE = process.env.CLIENT_URL_STAGE; // Get client URL from en
 const CLIENT_URL_DEV = process.env.CLIENT_URL_DEV; // Get client URL from env
 
 console.log(`DB_URI: ${DB_URI}`);
+console.log(`CLIENT_URL_PROD: ${CLIENT_URL_PROD}`);
+console.log(`CLIENT_URL_STAGE: ${CLIENT_URL_STAGE}`);
+console.log(`CLIENT_URL_DEV: ${CLIENT_URL_DEV}`);
 
 // Middleware
 app.use(bodyParser.json());
