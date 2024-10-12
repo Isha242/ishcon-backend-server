@@ -1,24 +1,25 @@
 const express = require("express");
 const userRouter = express.Router();
+// const authRouter = express.Router();
 
 const {
   getUser,
-  createUser,
   getUserById,
   updateUserById,
   deleteUserById,
   searchUserByParams,
-  forgetPassword,
-  resetPassword,
+  createUser,
 } = require("../controllers/userController");
 
+const { isAdmin } = require("../controllers/authController");
+
+// authRouter.use(protectRoute);
+
+userRouter.get("/", isAdmin, getUser);
 userRouter.get("/", searchUserByParams);
-userRouter.get("/", getUser);
 userRouter.post("/", createUser);
 userRouter.get("/:id", getUserById);
 userRouter.patch("/:id", updateUserById);
 userRouter.delete("/:id", deleteUserById);
-userRouter.post("/forgetPassword", forgetPassword);
-userRouter.patch("/resetPassword/:userId", resetPassword);
 
 module.exports = userRouter;

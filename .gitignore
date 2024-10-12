@@ -2,3 +2,5 @@
 /.env
 .env.production
 .env.stage
+cookies.js
+sendGridEmail.js

@@ -16,7 +16,7 @@ const checkInput = (req, res, next) => {
 };
 
 // Factory functions
-const createFactory = (elementModel) => async (req, res) => {
+const createFactory = (elementModel) => async (req, res, next) => {
   console.log("create all factory for", elementModel);
   try {
     const elementDetail = req.body;
@@ -35,14 +35,11 @@ const createFactory = (elementModel) => async (req, res) => {
       data: data,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 500,
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-const getFactory = (elementModel) => async (req, res) => {
+const getFactory = (elementModel) => async (req, res, next) => {
   console.log("get all factory for", elementModel);
   try {
     const data = await elementModel.find();
@@ -58,14 +55,11 @@ const getFactory = (elementModel) => async (req, res) => {
       data: data,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 500,
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-const getFactoryById = (elementModel) => async (req, res) => {
+const getFactoryById = (elementModel) => async (req, res,next) => {
   try {
     const { id } = req.params;
     const data = await elementModel.findById(id);
@@ -81,14 +75,11 @@ const getFactoryById = (elementModel) => async (req, res) => {
       data: data,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 500,
-      message: err.message,
-    });
+   next(err);
   }
 };
 
-const updateFactoryById = (elementModel) => async (req, res) => {
+const updateFactoryById = (elementModel) => async (req, res, next) => {
   try {
     console.log("request params", req.params);
     const { id } = req.params;
@@ -110,14 +101,11 @@ const updateFactoryById = (elementModel) => async (req, res) => {
       data: updatedData,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 500,
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-const deleteFactoryById = (elementModel) => async (req, res) => {
+const deleteFactoryById = (elementModel) => async (req, res, next) => {
   try {
     const { id } = req.params;
     const deletedData = await elementModel.findByIdAndDelete(id);
@@ -133,14 +121,11 @@ const deleteFactoryById = (elementModel) => async (req, res) => {
       data: deletedData,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 500,
-      message: err.message,
-    });
+    next(err);
   }
 };
 
-const searchFactoryByParams = (elementModel) => async (req, res) => {
+const searchFactoryByParams = (elementModel) => async (req, res, next) => {
   try {
     const sortQuery = req.query.sort;
     const selectQuery = req.query.select;
@@ -173,10 +158,7 @@ const searchFactoryByParams = (elementModel) => async (req, res) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).json({
-      message: "Internal server error",
-      error: err.message,
-    });
+    next(err);
   }
 };
 

@@ -1,18 +1,41 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
+  username: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: Number,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
     },
-    email: {
+    token: String,
+    otpExpiry: Date,
+    role: {
         type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    }
+        default:"user",
+  }
+//   confirmPassword: {
+//     type: String,
+//     required: true,
+//     minLength: 8,
+//     validate: function () {
+//       return this.password === this.confirmPassword;
+//     },
+//     message: "Password and confirmed password should be same",
+//   },
 });
 
 const User = mongoose.model("User", userSchema);
