@@ -8,8 +8,11 @@ const bodyParser = require("body-parser");
 const messageRouter = require("./routers/messageRouter");
 const userRouter = require("./routers/userRouter");
 const authRouter = require("./routers/authRouter");
-const { protectRoute, isAdmin } = require("./controllers/authController");
+const { protectRoute } = require("./controllers/authController");
 const cookieParser = require("cookie-parser");
+const bookingRouter = require("./routers/bookingRouter");
+const productRouter = require("./routers/productRouter");
+const reviewRouter = require("./routers/reviewRouter");
 /**---------------------------------------- */
 
 
@@ -49,20 +52,24 @@ mongoose
 
 
 /** ------------Routes---------------------*/
-app.use("/api/messages", messageRouter);
-app.use("/api/users", protectRoute, userRouter);
+app.use("/api/message", messageRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/user", protectRoute, userRouter);
+app.use("/api/product", productRouter);
+app.use("/api/booking", bookingRouter);
+app.use("/api/review", reviewRouter);
 /** ---------------------------------------*/
 
 
 /**----Central Error Handling Middleware----*/
-app.use((err, req, res) => {
-  const statuCode = err.statusCode || 500;
-  res.status(statuCode).json({
-    status: statuCode,
-    message: err.message,
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  console.log(statusCode);
+  res.status(statusCode).json({
+    message: "Internal Server Error",
+    error: err.message,
   });
-})
+});
 /** ---------------------------------------*/
 
 

@@ -8,8 +8,6 @@ const {
   updateMessageById,
   deleteMessageById,
   searchMessagerByParams,
-  forgetPassword,
-  resetPassword,
 } = require("../controllers/messageController");
 
 messageRouter.get("/", searchMessagerByParams);
@@ -18,7 +16,5 @@ messageRouter.post("/", createMessage);
 messageRouter.get("/:id", getMesssgeById);
 messageRouter.patch("/:id", updateMessageById);
 messageRouter.delete("/:id", deleteMessageById);
-messageRouter.post("/forgetPassword", forgetPassword);
-messageRouter.patch("/resetPassword/:userId", resetPassword);
 
 module.exports = messageRouter;

@@ -11,15 +11,23 @@ const {
   createUser,
 } = require("../controllers/userController");
 
-const { isAdmin } = require("../controllers/authController");
+const { isAdmin, protectRoute, isAuthorized } = require("../controllers/authController");
+const { checkInput } = require("../utils/crudFactory");
 
 // authRouter.use(protectRoute);
+const authorizedUserRoles = ["admin", "ceo", "sales", "manager"];
+const authorizedToDeleteUserRoles = ["admin", "ceo"];
 
-userRouter.get("/", isAdmin, getUser);
+userRouter.get("/", protectRoute, isAuthorized(authorizedUserRoles), getUser);
 userRouter.get("/", searchUserByParams);
-userRouter.post("/", createUser);
+userRouter.post("/", checkInput, protectRoute, isAuthorized(authorizedUserRoles), createUser);
 userRouter.get("/:id", getUserById);
 userRouter.patch("/:id", updateUserById);
-userRouter.delete("/:id", deleteUserById);
+userRouter.delete(
+  "/:id",
+  protectRoute,
+  isAuthorized(authorizedToDeleteUserRoles),
+  deleteUserById
+);
 
 module.exports = userRouter;

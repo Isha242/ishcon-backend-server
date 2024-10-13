@@ -16,12 +16,21 @@ app.use(express.json());
 const signUpHandler = async (req, res) => {
   try {
     const userObj = req.body;
-    const user = await User.create(userObj);
-    res.status(201).json({
-      status: 201,
-      message: "User created successfully",
-      data: user,
-    });
+    const existingUser = await User.findOne({ email: userObj.email });
+    if (existingUser) {
+      res.status(400).json({
+        status: 400,
+        message: `User with ${userObj.email} already exists, Please login instead!`,
+      });
+    } else {
+      
+      const newUser = await User.create(userObj);
+      res.status(201).json({
+        status: 201,
+        message: "User created successfully!",
+        data: newUser,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       status: 500,
@@ -34,8 +43,7 @@ const signUpHandler = async (req, res) => {
 const loginHandler = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    console.log(user);
+    const user = await User.findOne({ email }); 
     if (!user) {
       res.status(400).json({
         status: 400,
@@ -70,6 +78,22 @@ const loginHandler = async (req, res) => {
   }
 };
 
+const isAuthorized = (allowedRoles) => {
+  return async (req, res, next) => {
+    const userId = req.userId;
+    console.log("userId", userId);
+    const user = await User.findById(userId);
+    if (allowedRoles.includes(user.role)) {
+      next();
+    } else {
+      res.status(401).json({
+        status: "failed to authenticate",
+        message: "You are not authorized to access this route",
+      });
+    }
+  };
+};
+
 //protect the route - verify token
 const protectRoute = async (req, res, next) => {
   try {
@@ -94,10 +118,10 @@ const protectRoute = async (req, res, next) => {
 
 //isAdmin
 const isAdmin = async (req, res, next) => {
-    const userId = req.userId;
-    // console.log("userId", userId);
-    const user = await User.findById(userId);
-    // console.log("user", user);
+  const userId = req.userId;
+  // console.log("userId", userId);
+  const user = await User.findById(userId);
+  // console.log("user", user);
   if (user.role === "admin") {
     next();
   } else {
@@ -219,4 +243,5 @@ module.exports = {
   signUpHandler,
   loginHandler,
   logoutHandler,
+  isAuthorized,
 };
